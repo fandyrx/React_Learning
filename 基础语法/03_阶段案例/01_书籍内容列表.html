@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  
+</head>
+<body>
+  <div id="app"></div>
+  
+  
+  <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  <script src="./format-utils.js"></script>
+<style>
+  table{
+    border: 1px solid #eee;
+    /* 边框间隙合并  */
+    border-collapse:collapse;
+  }
+  tr,td{
+    border: 1px solid #eee;
+    padding:10px 16px;
+    text-align: center;
+  }
+
+  th{
+    background-color: #ccc;
+  }
+  .count{
+    margin: 0 5px;
+  }
+
+
+
+</style>
+
+  <script type="text/babel">
+    class App extends React.Component{
+        constructor(){
+          super();
+
+          this.state = {
+            message : 'movie',
+            books:[
+              {
+                id:1,
+                name:'《算法导论》',
+                price:19.04,
+                date:"2006-9",
+                count:1
+              },
+              {
+                id:2,
+                name:'《艺术》',
+                price:59.00,
+                date:"2016-1",
+                count:3
+              },
+              {
+                id:3,
+                name:'《UNIX编程艺术》',
+                price:50.00,
+                date:"2008-10",
+                count:1
+              },
+              {
+                id:4,
+                name:'《React学习》',
+                price:31.00,
+                date:"2036-9",
+                count:1
+              },
+              {
+                id:5,
+                name:'《JS高级》',
+                price:25.00,
+                date:"2012-3",
+                count:5
+              },
+            ]
+          }
+        } 
+        //1.渲染的结构
+        renderBooks(){
+          return (
+          <div>
+            <table>
+              <thead>
+                <tr>
+                  <th></th>  
+                  <th>书籍名称</th>  
+                  <th>出版日期</th>  
+                  <th>价格</th>  
+                  <th>购买数量</th>  
+                  <th>操作</th>  
+                </tr>  
+              </thead>
+                <tbody>
+                {
+                  this.state.books.map((item,index)=>{
+                    return (
+                      <tr>
+                        <td>{index+1}</td>
+                        <td>{item.name}</td>
+                        <td>{item.date}</td>
+                        <td>{formatPrice(item.price)}</td>
+                        <td > 
+                          <button disabled={item.count <= 1} onClick={ e=>  this.changeCount(index,-1)}>-</button>  
+                          <span className="count">{item.count}</span>  
+                          <button onClick={(e)=> { this.changeCount(index,1)}}>+</button>  
+                        </td>
+                        <td><button onClick={ (e)=>this.removeBook(index) }>移除</button></td>
+                       </tr>
+                    )
+                  })
+                }
+                </tbody>
+            </table>  
+
+            <h2>总价格:{this.getTotalPrice()}</h2>
+          </div>
+        )     
+        }
+
+
+        renderEmptyTip (){
+          return( 
+            <h2>没有书籍了</h2>
+          ) 
+        }
+        //2.渲染函数
+      render(){
+        return this.state.books.length ? this.renderBooks() : this.renderEmptyTip()
+      }
+      //3.移除书本  数据修改需要用this.setState 实现数据驱动页面更新,每次修改,render 再次调用
+      removeBook(index){
+        this.setState({
+          books:this.state.books.filter((item,indey)=> index != indey)
+        })
+      }
+
+      getTotalPrice() {
+        //1.遍历
+        // let totalPrice= 0;
+        // for (let item of this.state.books) {
+        //   totalPrice += item.price * item.count
+        // }
+        // return formatPrice(totalPrice);
+        //2.filter过滤 map映射 reduce归纳
+        const totalPrice =  this.state.books.reduce((preVal,item,index,arr)=>{
+            return preVal += item.price * item.count
+        },0);
+        return formatPrice(totalPrice);
+      }
+
+      changeCount(index,num){
+        let newBooks = this.state.books
+        newBooks[index].count += num
+        this.setState({
+          books: newBooks
+        })
+
+      }
+
+    }
+      ReactDOM.render(<App/>,document.getElementById('app'))
+  </script>
+  
+</body>
+</html>
