@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+   <div id="app"></div>
+  
+
+  <script type="text/babel">
+  
+    class App extends React.Component {
+      constructor() {
+        //1. 初始化父类实例 this 指向
+        super();
+
+      this.state = {
+        message : "Hello World"
+      }
+      }
+
+
+      render(){
+       /*  2.渲染jsx   
+        注意点:1根节点唯一性
+        2 若依赖数据使用this.setState 
+        3 方法首字母大写,
+         4 bind this指向,否则undefiend */
+        return (
+          <div>
+            <h2>{this.state.message}</h2>
+            
+            <button onClick={this.btnClick.bind(this)}>改变文本</button>
+          </div>
+        )
+      }
+
+
+      btnClick (){
+        //响应式修改数据, 自动更新渲染render调用
+          this.setState({
+            message : "Hello React",
+          })
+
+     }
+
+    }
+
+  //渲染DOM页面      <App/>
+   ReactDOM.render(<App/>,document.getElementById('app')) 
+
+    
+  </script>
+</body>
+</html>
