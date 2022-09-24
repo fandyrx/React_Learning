@@ -39,6 +39,41 @@ store.subscribe(()=>{
 - this.setState()更新该组件数据
 - render()重新被触发
 
+
+
+# hooks `import { useDispatch,useSelector,shallowEqual } from 'react-redux'`
+```
+//获取数据,dispatch
+const { topBanners } = useSelector(state=>({
+ topBanners : state.recommend.topBanners        //获取数据,返回一个对象
+}),shallowEqual)     /useSelector默认使用 === 对比,页面数据不依赖也会引起页面更新,shallowEqual就会浅层比较,优化性能
+
+const dispatch = useDispatch();    //获取dispatch
+
+
+```
+```
+store定义 传入各个切片定义的 reducer 
+const store = configureStore({
+  reducer:{
+    student:stuSlice.reducer
+  }
+})
+```
+
+## 1.useSelector 用来加载state 中数据
+useSelector(state => state.student )
+
+## 2.useDispatch 获取派发器对象
+  //state 是总的状态,根据configStore里定义的reducer名字,获取对应的state
+	`const StudentState = useSelector(state => state.student)`
+
+
+
+
+
+
+
 # Redux Toolkit 简化了编写 Redux 逻辑和设置 store 的过程。 
 
 
@@ -81,7 +116,28 @@ store.dispatch(decremented())
 // {value: 1}
 ```
 
+## 异步请求:createAsyncThunk("标记名",异步回调)
+- 1.切片(slice)中定义属性: `extraReducers: (builder)=>{ builder.addCase(异步操作命名.状态,(state,action)=>{数据操作等})}`,
+```
+  extraReducers: builder => {
+    builder.addCase(changeAsync.fulfilled,(state,action) => {
+      state.name = action.payload
+    })
+  }
 
+//模拟异步操作,自定义方法
+export const changeAsync = createAsyncThunk("changeAsync",async ()=> {
+  const res = await new Promise((resolve,reject) =>{
+    setTimeout(() => {
+      resolve(" 我是2s异步请求模拟结果")
+    }, 2000);
+  })
+  // 上方为异步请求AXIOS 
+  return res
+})
+
+dispatch(changeAsync()) //获取dispatch,引入,并在需要异步数据的地方调用即可
+```
 
 # 个人总结:
 ## 1.基本方法:
@@ -89,7 +145,7 @@ store.dispatch(decremented())
 - 2. index.js 设置
 ```
 index.js :
-<!-- 引入 -->
+
 import {createStore} from "redux"
 <!-- 引入reducer(事件处理器) -->
 import reducer from "./reducer.js"
@@ -211,3 +267,33 @@ export default class home extends PureComponent {
 ## 2.库
 yarn add react-redux
 
+## 3.dev_tools
+`const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;`
+
+```
+// 1.方法一:  composeEnhancers( ) 传入applyMiddleWare(...middleWares)      
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose; // compose,由redux 导入
+
+const store = createStore(
+    reducer,
+    composeEnhancers( applyMiddleware(thunk) ),
+    )
+
+```
+```
+//方法二: 下载@redux-devtools/extension   引入composeWithDevTools包裹applyMiddleware(...xxx)
+import { composeWithDevTools } from '@redux-devtools/extension';
+
+const store = createStore(
+    reducer,
+    composeWithDevTools( applyMiddleware(thunk)),
+    )
+
+    export default store
+
+
+```
+```
+@reduxjs/toolkit 默认开启devtool 不用另外引入,自带react-thunk?如何用
+
+```
