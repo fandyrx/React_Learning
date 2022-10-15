@@ -8,7 +8,9 @@ const initialState = {
   counter:0
 }
 
-//  reducer
+//  reducer     数组的函数:Array.prototype.reduce(reducer,?initialValue)
+// ['a','b'].reduce(回调函数,初始值)
+// ['a', 'b'].reduce((preValue, item, index) => { do something},初始值)
 function reducer(state = initialState,action) {
   switch(action.type) {
     case "INCREMENT": 

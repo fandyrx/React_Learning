@@ -10,6 +10,7 @@ const stuSlice = createSlice({
     gender:"男",
     address:"花果山"
   },
+  
   reducers:{  //指定state的各种操作
     setName(state,action) {
       console.log("state:",state,"action:",action)

@@ -4,7 +4,7 @@ import { changeAsync, setName } from './store';
 
 
 export default function App() {
-	const dispatch =useDispatch();
+	const dispatch = useDispatch();
 	const {name} = useSelector(state => state.student)
 	
 

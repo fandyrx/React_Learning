@@ -1,5 +1,5 @@
 // 引入常量名 
-import { INCREMENT,DECREMENT,ADD_NUMBER,SUB_NUMBER,CHANGE_BANNER,FETCH_HOME_MULTIDATA} from "./constants.js"
+import { INCREMENT,DECREMENT,ADD_NUMBER,SUB_NUMBER} from "./constants.js"
 
 export const addAction = num => ({
   type:ADD_NUMBER,
@@ -22,13 +22,3 @@ export const  decrement = num => ({
   num
 })
 
-export  const changeBanners =  banner =>({
-    type:CHANGE_BANNER,
-    banner
- 
-})
-//saga 拦截 的action
-export const fetchHomeMultidataAction = {
-  type:FETCH_HOME_MULTIDATA,
-  
-}

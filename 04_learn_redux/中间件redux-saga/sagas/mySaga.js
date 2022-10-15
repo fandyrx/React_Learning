@@ -1,4 +1,4 @@
-import { call, put, takeEvery, takeLatest } from 'redux-saga/effects'
+import { call,all, put, takeEvery, takeLatest } from 'redux-saga/effects'
 // 引入网络请求 
 // import Api from '...'
 import axios from "axios"
@@ -15,6 +15,11 @@ function* fetchHomeData(action) {
   const banners = result.data.data.banner.list
  
   yield put(changeBanners(banners))
+//all 所有都执行
+  yield all([
+    yield put (changeBanners(banners)),
+    // yield put (changexxxxxAciotn( params ))
+  ])
 
 
   //  try {
